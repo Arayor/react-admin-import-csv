@@ -1,5 +1,5 @@
 import { Translate, DataProvider, Identifier } from "ra-core";
-import { processCsvFile } from "./csv-extractor";
+import { processFile } from "./csv-extractor";
 import { SimpleLogger } from "./SimpleLogger";
 import { ValidateRowFunction } from "./config.interface";
 
@@ -114,7 +114,7 @@ export async function GetCSVItems(
   const logger = makeLogger(logging);
   let csvValues: any[] | undefined;
   try {
-    csvValues = await processCsvFile(file, parseConfig);
+    csvValues = await processFile(file, parseConfig);
     return csvValues || [];
   } catch (error) {
     logger.error("GetCSVItems", { csvValues }, error);

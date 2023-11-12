@@ -31,7 +31,10 @@ export async function processXlsxFile(file: File) {
       const workbook = XLSX.read(data, { type: 'array' });
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
-      const json = XLSX.utils.sheet_to_json(worksheet);
+      const json = XLSX.utils.sheet_to_json(worksheet, {
+        blankrows: false,
+        defval: null,
+      });
       resolve(json);
     };
     reader.onerror = (error) => reject(error);
