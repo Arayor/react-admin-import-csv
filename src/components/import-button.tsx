@@ -33,7 +33,7 @@ export function ImportButton(props: ImportButtonProps) {
           type="file"
           style={{ display: "none" }}
           onChange={onFileAdded}
-          accept=".csv,.tsv"
+          accept=".csv,.tsv,.xlsx"
         />
       </div>
     </Tooltip>

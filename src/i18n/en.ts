@@ -2,7 +2,7 @@ export default {
   csv: {
     buttonMain: {
       label: "Import",
-      tooltip: "Must be a '.csv' or '.tsv' file",
+      tooltip: "Must be a '.csv', '.tsv' or '.xlsx' file",
       emptyResource:
         "The 'resource' property was empty, did you pass in the {...props} to the ImportButton?",
     },

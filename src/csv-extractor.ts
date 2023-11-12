@@ -1,6 +1,8 @@
 import { parse as convertFromCSV, ParseConfig } from "papaparse";
 import lensPath from "ramda/src/lensPath.js";
 import over from "ramda/src/over.js";
+import * as XLSX from 'xlsx';
+
 
 type PapaString = string | null | number;
 
@@ -8,6 +10,34 @@ const setObjectValue = (object: any, path: PapaString, value: any): any => {
   const lensPathFunction = lensPath((!!path ? path+'' : '').split("."));
   return over(lensPathFunction, () => value, object || {});
 };
+
+export async function processFile(file: File | any, parseConfig: ParseConfig = {}) {
+  if (!file) {
+    return;
+  }
+  if (file.name.endsWith('.xlsx')) {
+    return processXlsxFile(file);
+  } else {
+    const csvData = await getCsvData(file, parseConfig);
+    return processCsvData(csvData);
+  }
+}
+
+export async function processXlsxFile(file: File) {
+  return new Promise<any[]>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const json = XLSX.utils.sheet_to_json(worksheet);
+      resolve(json);
+    };
+    reader.onerror = (error) => reject(error);
+    reader.readAsArrayBuffer(file);
+  });
+}
 
 export async function processCsvFile(
   file: File | any,
